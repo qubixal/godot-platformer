@@ -1,3 +1,215 @@
-[gd_scene load_steps=1 format=3]
+[gd_scene format=4 uid="uid://b1qr40ugtf4kd"]
 
-[node name="Main" type="Node"]
+[ext_resource type="Script" uid="uid://bw4lb4l8nx0a0" path="res://player.gd" id="1_h2yge"]
+[ext_resource type="Texture2D" uid="uid://c34nn1nbelen7" path="res://assets/player.png" id="2_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://dlwnh8t514pda" path="res://assets/tiles.png" id="3_lquwl"]
+[ext_resource type="Texture2D" uid="uid://32dguildus41" path="res://assets/bg_mid.png" id="bg_mid"]
+[ext_resource type="Texture2D" uid="uid://bfx7kcvytiaew" path="res://assets/bg_near.png" id="bg_near"]
+[ext_resource type="Texture2D" uid="uid://cikr7gv5nx7pw" path="res://assets/bg_sky.png" id="bg_sky"]
+[ext_resource type="Script" uid="uid://kd57rpsvg678" path="res://main.gd" id="main_gd"]
+[ext_resource type="AudioStream" uid="uid://cse4dysh3iuv0" path="res://assets/sfx/coin.wav" id="sfx_coin"]
+[ext_resource type="AudioStream" uid="uid://8ibhk1ob1fag" path="res://assets/sfx/flip.wav" id="sfx_flip"]
+[ext_resource type="AudioStream" uid="uid://dysovbalq88l6" path="res://assets/sfx/hurt.wav" id="sfx_hurt"]
+[ext_resource type="AudioStream" uid="uid://7lctt5hnm4ao" path="res://assets/sfx/jump.wav" id="sfx_jump"]
+[ext_resource type="AudioStream" uid="uid://n0741cd5h407" path="res://assets/sfx/win.wav" id="sfx_win"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_usrg6"]
+size = Vector2(24, 26)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_h2yge"]
+texture = ExtResource("3_lquwl")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:0/0 = 0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+3:0/0 = 0
+3:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[sub_resource type="TileSet" id="TileSet_1bvp3"]
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_h2yge")
+
+[node name="Main" type="Node" unique_id=1021821200]
+script = ExtResource("main_gd")
+
+[node name="BG" type="CanvasLayer" parent="." unique_id=1814309674]
+layer = -10
+
+[node name="Sky" type="Sprite2D" parent="BG" unique_id=1435538937]
+position = Vector2(576, 324)
+texture = ExtResource("bg_sky")
+
+[node name="Mid" type="Sprite2D" parent="BG" unique_id=2046907565]
+position = Vector2(576, 324)
+scale = Vector2(2, 2)
+texture = ExtResource("bg_mid")
+
+[node name="Near" type="Sprite2D" parent="BG" unique_id=1749785538]
+position = Vector2(576, 324)
+scale = Vector2(2, 2)
+texture = ExtResource("bg_near")
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1912796428]
+position = Vector2(16, 320)
+collision_layer = 2
+script = ExtResource("1_h2yge")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=342365732]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_1bvp3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=1002136071]
+shape = SubResource("RectangleShape2D_usrg6")
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=360067092]
+limit_left = -200
+limit_top = -300
+limit_right = 2400
+limit_bottom = 700
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+
+[node name="LandDust" type="CPUParticles2D" parent="Player" unique_id=466875197]
+emitting = false
+amount = 10
+lifetime = 0.4
+one_shot = true
+explosiveness = 0.9
+direction = Vector2(0, -1)
+spread = 60.0
+gravity = Vector2(0, 300)
+initial_velocity_min = 80.0
+initial_velocity_max = 160.0
+color = Color(0.85, 0.9, 1, 1)
+
+[node name="FlipBurst" type="CPUParticles2D" parent="Player" unique_id=975667397]
+emitting = false
+amount = 16
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.95
+direction = Vector2(0, 1)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 120.0
+initial_velocity_max = 260.0
+color = Color(0.24, 0.9, 0.77, 1)
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=47007203]
+tile_map_data = PackedByteArray("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AAAmAA0AAAABAAAAAAAmAA4AAAABAAAAAAAnAA0AAAABAAAAAAAnAA4AAAABAAAAAAAoAA0AAAABAAAAAAAoAA4AAAABAAAAAAApAA0AAAABAAAAAAApAA4AAAABAAAAAAAqAA0AAAABAAAAAAAqAA4AAAABAAAAAAArAA0AAAABAAAAAAArAA4AAAABAAAAAAAsAA0AAAABAAAAAAAsAA4AAAABAAAAAAAtAA0AAAABAAAAAAAtAA4AAAABAAAAAAAuAA0AAAABAAAAAAAuAA4AAAABAAAAAAAvAA0AAAABAAAAAAAvAA4AAAABAAAAAAAwAA0AAAABAAAAAAAwAA4AAAABAAAAAAAxAA0AAAABAAAAAAAxAA4AAAABAAAAAAAyAA0AAAABAAAAAAAyAA4AAAABAAAAAAAzAA0AAAABAAAAAAAzAA4AAAABAAAAAAA0AA0AAAABAAAAAAA0AA4AAAABAAAAAAA1AA0AAAABAAAAAAA1AA4AAAABAAAAAAA2AA0AAAABAAAAAAA2AA4AAAABAAAAAAA3AA0AAAABAAAAAAA3AA4AAAABAAAAAAA4AA0AAAABAAAAAAA4AA4AAAABAAAAAAA5AA0AAAABAAAAAAA5AA4AAAABAAAAAAA6AA0AAAABAAAAAAA6AA4AAAABAAAAAAA7AA0AAAABAAAAAAA7AA4AAAABAAAAAAA8AA0AAAABAAAAAAA8AA4AAAABAAAAAAA9AA0AAAABAAAAAAA9AA4AAAABAAAAAAA+AA0AAAABAAAAAAA+AA4AAAABAAAAAAA/AA0AAAABAAAAAAA/AA4AAAABAAAAAABAAA0AAAABAAAAAABAAA4AAAABAAAAAABBAA0AAAABAAAAAABBAA4AAAABAAAAAABCAA0AAAABAAAAAABCAA4AAAABAAAAAABDAA0AAAABAAAAAABDAA4AAAABAAAAAABEAA0AAAABAAAAAABEAA4AAAABAAAAAABFAA0AAAABAAAAAABFAA4AAAABAAAAAABGAA0AAAABAAAAAABGAA4AAAABAAAAAAAUAAEAAAABAAAAAAAUAAAAAAABAAAAAAAVAAEAAAABAAAAAAAVAAAAAAABAAAAAAAWAAEAAAABAAAAAAAWAAAAAAABAAAAAAAXAAEAAAABAAAAAAAXAAAAAAABAAAAAAAYAAEAAAABAAAAAAAYAAAAAAABAAAAAAAZAAEAAAABAAAAAAAZAAAAAAABAAAAAAAaAAEAAAABAAAAAAAaAAAAAAABAAAAAAAbAAEAAAABAAAAAAAbAAAAAAABAAAAAAAcAAEAAAABAAAAAAAcAAAAAAABAAAAAAAdAAEAAAABAAAAAAAdAAAAAAABAAAAAAAeAAEAAAABAAAAAAAeAAAAAAABAAAAAAAfAAEAAAABAAAAAAAfAAAAAAABAAAAAAAgAAEAAAABAAAAAAAgAAAAAAABAAAAAAAhAAEAAAABAAAAAAAhAAAAAAABAAAAAAAiAAEAAAABAAAAAAAiAAAAAAABAAAAAAAjAAEAAAABAAAAAAAjAAAAAAABAAAAAAAkAAEAAAABAAAAAAAkAAAAAAABAAAAAAAlAAEAAAABAAAAAAAlAAAAAAABAAAAAAAmAAEAAAABAAAAAAAmAAAAAAABAAAAAAAnAAEAAAABAAAAAAAnAAAAAAABAAAAAAAoAAEAAAABAAAAAAAoAAAAAAABAAAAAAAIAAgAAAACAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAADAAAAAAASAAkAAAACAAAAAAATAAkAAAAAAAAAAAAUAAkAAAAAAAAAAAAVAAkAAAADAAAAAAAYAAYAAAACAAAAAAAZAAYAAAAAAAAAAAAaAAYAAAADAAAAAAAkAAgAAAACAAAAAAAlAAgAAAAAAAAAAAAmAAgAAAADAAAAAAAsAAkAAAACAAAAAAAtAAkAAAAAAAAAAAAuAAkAAAAAAAAAAAAvAAkAAAADAAAAAAA0AAYAAAACAAAAAAA1AAYAAAAAAAAAAAA2AAYAAAADAAAAAAA=")
+tile_set = SubResource("TileSet_1bvp3")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=413255424]
+layer = 10
+
+[node name="ScoreLabel" type="Label" parent="HUD" unique_id=1752498411]
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 300.0
+offset_bottom = 44.0
+theme_override_colors/font_outline_color = Color(0.1, 0.11, 0.17, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 26
+text = "COINS 0/0"
+
+[node name="TimerLabel" type="Label" parent="HUD" unique_id=517183632]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -60.0
+offset_top = 12.0
+offset_right = 60.0
+offset_bottom = 44.0
+theme_override_colors/font_outline_color = Color(0.1, 0.11, 0.17, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 26
+text = "0:00"
+horizontal_alignment = 1
+
+[node name="DeathsLabel" type="Label" parent="HUD" unique_id=821872535]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -216.0
+offset_top = 12.0
+offset_right = -16.0
+offset_bottom = 44.0
+theme_override_colors/font_outline_color = Color(0.1, 0.11, 0.17, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 26
+text = "DEATHS 0"
+horizontal_alignment = 2
+
+[node name="HintLabel" type="Label" parent="HUD" unique_id=266189675]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -400.0
+offset_top = -44.0
+offset_right = 400.0
+offset_bottom = -12.0
+theme_override_colors/font_color = Color(0.75, 0.85, 1, 0.9)
+theme_override_colors/font_outline_color = Color(0.1, 0.11, 0.17, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 20
+text = "Controls: WASD / ARROWS | Gravity Flip X/SHIFT/F | Retry R"
+horizontal_alignment = 1
+
+[node name="WinPanel" type="PanelContainer" parent="HUD" unique_id=1474446707]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -100.0
+offset_right = 280.0
+offset_bottom = 100.0
+
+[node name="Margin" type="MarginContainer" parent="HUD/WinPanel" unique_id=9291839]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="HUD/WinPanel/Margin" unique_id=1166558393]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="HUD/WinPanel/Margin/VBox" unique_id=860091393]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.24, 0.9, 0.77, 1)
+theme_override_font_sizes/font_size = 44
+text = "COMPLETED!"
+horizontal_alignment = 1
+
+[node name="StatsLabel" type="Label" parent="HUD/WinPanel/Margin/VBox" unique_id=2048746679]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "TIME 0:00"
+horizontal_alignment = 1
+
+[node name="Audio" type="Node" parent="." unique_id=819596788]
+
+[node name="Jump" type="AudioStreamPlayer" parent="Audio" unique_id=1390143929]
+stream = ExtResource("sfx_jump")
+
+[node name="Coin" type="AudioStreamPlayer" parent="Audio" unique_id=856685555]
+stream = ExtResource("sfx_coin")
+
+[node name="Flip" type="AudioStreamPlayer" parent="Audio" unique_id=118154235]
+stream = ExtResource("sfx_flip")
+
+[node name="Hurt" type="AudioStreamPlayer" parent="Audio" unique_id=1208851184]
+stream = ExtResource("sfx_hurt")
+
+[node name="Win" type="AudioStreamPlayer" parent="Audio" unique_id=1431171450]
+stream = ExtResource("sfx_win")
